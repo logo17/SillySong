@@ -24,14 +24,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         nameField.delegate = self
         nameField.returnKeyType = UIReturnKeyType.done
-        // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
     @IBAction func reset(_ sender: Any) {
         nameField.text = ""
@@ -45,13 +38,27 @@ class ViewController: UIViewController {
     }
     
     func shortNameFromName(_ name: String) -> String {
-        var result = name.lowercased()
-        result.remove(at: result.startIndex)
+        var result = ""
+        if !name.isEmpty {
+            let vowels : [Character] = ["a", "e", "i", "o", "u"]
+            result = name.lowercased()
+            for character in result {
+                if vowels.contains(character) {
+                    if let auxIndex = result.index(of: character) {
+                        result = String(result[auxIndex...])
+                        break
+                    }
+                }
+            }
+        }
         return result
     }
     
     func lyricsForName(lyricsTemplate: String, fullName: String) -> String {
-        let result = lyricsTemplate.replacingOccurrences(of: "<FULL_NAME>", with: fullName).replacingOccurrences(of: "<SHORT_NAME>", with: shortNameFromName(fullName))
+        var result = ""
+        if !fullName.isEmpty {
+            result = lyricsTemplate.replacingOccurrences(of: "<FULL_NAME>", with: fullName).replacingOccurrences(of: "<SHORT_NAME>", with: shortNameFromName(fullName))
+        }
         return result
     }
     
